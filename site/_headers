@@ -1,0 +1,6 @@
+/catalogue-pages/*
+  Cache-Control: public, max-age=31536000, immutable
+/web-catalogue.json
+  Cache-Control: no-cache
+/
+  Cache-Control: no-cache
