@@ -1,6 +1,9 @@
 name: Sync public catalogues
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['site/index.html']
   schedule:
     - cron: '7,22,37,52 * * * *'
 permissions:
