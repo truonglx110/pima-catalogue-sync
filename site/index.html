@@ -414,6 +414,7 @@ async function openPublic(id){
  };
  await load(range);
 }
+const catalogueName=name=>String(name).replace(/\.pdf$/i,'').replace(/^\d+\s*[.\-]\s*/,'').replace(/_/g,' ').trim();
 async function scanPublic(){
  if(scanning||document.hidden)return;
  scanning=true;const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),25000);
@@ -422,8 +423,8 @@ async function scanPublic(){
   const known=new Map(publicFiles.map(f=>[f.id,f.modifiedTime]));publicFiles=files;
   $('catalogues').replaceChildren();for(const f of files){const o=document.createElement('option');o.value=f.id;o.textContent=f.name;$('catalogues').append(o)}
   if(!files.length){const o=document.createElement('option');o.textContent='Chưa có PDF công khai';$('catalogues').append(o);status('Không tìm thấy PDF công khai. Kiểm tra chia sẻ thư mục và PDF.');return}
-  const preferred=files.find(f=>f.id==='1IxLbYnUdnKq0ENJlU-qj4rY8gImEQJSF')
-   ||files.find(f=>/^PIMA\s*[-–—]\s*GENERAL(?:\s+CATALOGUE)?(?:\.pdf)?$/i.test(f.name.trim()))
+  const preferred=files.find(f=>/^PIMA\s*[-–—]\s*GENERAL(?:\s+CATALOGUE)?$/i.test(catalogueName(f.name)))
+   ||files.find(f=>f.id==='1IxLbYnUdnKq0ENJlU-qj4rY8gImEQJSF')
    ||files.find(f=>/^1\.\s*CATALOGUE\s+PIMA\b/i.test(f.name))
    ||files[0];
   if(!selectedPublic){await openPublic(preferred.id)}else{
@@ -445,7 +446,6 @@ function mobileLabels(){
 mobileLabels();addEventListener('resize',mobileLabels);
 
 let cataloguePreviews={},libraryFrame=0;
-const catalogueName=name=>String(name).replace(/\.pdf$/i,'').replace(/^\d+\s*[.\-]\s*/,'').replace(/_/g,' ').trim();
 function renderCatalogueLibrary(){
  const files=publicFiles||[],selected=$('catalogues').value;
  $('libraryCount').textContent=String(files.length);
